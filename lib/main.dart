@@ -1,10 +1,17 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:easywalk/modules/splash/binding/splash_binding.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    DevicePreview(
+      enabled: !kReleaseMode,
+      builder: (context) => const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -17,6 +24,7 @@ class MyApp extends StatelessWidget {
       designSize: const Size(374, 780),
       builder: ((context, child) {
         return GetMaterialApp(
+          locale: DevicePreview.locale(context),
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             scaffoldBackgroundColor: Colors.transparent,
@@ -29,10 +37,7 @@ class MyApp extends StatelessWidget {
           initialBinding: SplashBinding(),
           smartManagement: SmartManagement.full,
           navigatorKey: Get.key,
-          builder: (context, child) => MediaQuery(
-            data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-            child: child!,
-          ),
+          builder: DevicePreview.appBuilder,
         );
       }),
     );
