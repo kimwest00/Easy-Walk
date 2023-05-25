@@ -35,6 +35,8 @@
             android:name="flutterEmbedding"
             android:value="2" />
         <meta-data android:name="com.kakao.sdk.AppKey" android:value="ab06463547c1d4c6a5642369ef79e8a8"/>
-            
+        <meta-data
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="3axm0lhvpx" />
     </application>
 </manifest>

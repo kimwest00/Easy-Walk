@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:easywalk/modules/splash/controller/splash_controller.dart';
 import 'package:get/get.dart';
 

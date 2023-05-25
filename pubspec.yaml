@@ -41,6 +41,7 @@ dependencies:
   kakao_map_plugin: ^0.1.4
   card_swiper: ^2.0.4
   device_preview: ^1.1.0
+  flutter_naver_map: ^1.0.1
 
 dev_dependencies:
   flutter_test:
@@ -70,23 +71,23 @@ flutter:
   fonts:
     - family: Inter
       fonts:
-        - asset: font/Inter/Inter-Thin.ttf
+        - asset: assets/font/Inter/Inter-Thin.ttf
           weight: 100
-        - asset: font/Inter/Inter-ExtraLight.ttf
+        - asset: assets/font/Inter/Inter-ExtraLight.ttf
           weight: 200
-        - asset: font/Inter/Inter-Light.ttf
+        - asset: assets/font/Inter/Inter-Light.ttf
           weight: 300
-        - asset: font/Inter/Inter-Regular.ttf
+        - asset: assets/font/Inter/Inter-Regular.ttf
           weight: 400
-        - asset: font/Inter/Inter-Medium.ttf
+        - asset: assets/font/Inter/Inter-Medium.ttf
           weight: 500
-        - asset: font/Inter/Inter-SemiBold.ttf
+        - asset: assets/font/Inter/Inter-SemiBold.ttf
           weight: 600
-        - asset: font/Inter/Inter-Bold.ttf
+        - asset: assets/font/Inter/Inter-Bold.ttf
           weight: 700
-        - asset: font/Inter/Inter-ExtraBold.ttf
+        - asset: assets/font/Inter/Inter-ExtraBold.ttf
           weight: 800
-        - asset: font/Inter/Inter-Black.ttf
+        - asset: assets/font/Inter/Inter-Black.ttf
           weight: 900
      
    

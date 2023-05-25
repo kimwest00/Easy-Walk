@@ -1,5 +1,6 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:easywalk/modules/splash/binding/splash_binding.dart';
+import 'package:easywalk/provider/routes/pages.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
       designSize: const Size(374, 780),
       builder: ((context, child) {
         return GetMaterialApp(
+          getPages: Pages.routes,
           locale: DevicePreview.locale(context),
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
