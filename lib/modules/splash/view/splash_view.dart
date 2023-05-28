@@ -39,6 +39,25 @@ class SplashScreen extends GetView<SplashController> {
                   SizedBox(
                     height: 50.h,
                   ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: (() async {
+                            await Get.toNamed('/home');
+                          }),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 12.h),
+                            child: Text(
+                              "시작하기",
+                              //TODO: textstyle 수정
+                              style: AppTextStyles.size16Bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                   Text(
                     controller.titleList[index],
                     style: AppTextStyles.size17Bold,
@@ -71,27 +90,27 @@ class SplashScreen extends GetView<SplashController> {
                   ),
                   //TODO: 맨마지막 인덱스에 도달했을때 버튼 visible 처리
                   //TODO: pagination 1-way만 가능하게
-                  index == 2
-                      ? Row(
-                          children: [
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: (() async {
-                                  await Get.toNamed('/home');
-                                }),
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 12.h),
-                                  child: Text(
-                                    "시작하기",
-                                    //TODO: textstyle 수정
-                                    style: AppTextStyles.size16Bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      : const SizedBox.shrink()
+                  // index == 2
+                  //     ? Row(
+                  //   children: [
+                  //     Expanded(
+                  //       child: GestureDetector(
+                  //         onTap: (() async {
+                  //           await Get.toNamed('/home');
+                  //         }),
+                  //         child: Padding(
+                  //           padding: EdgeInsets.symmetric(vertical: 12.h),
+                  //           child: Text(
+                  //             "시작하기",
+                  //             //TODO: textstyle 수정
+                  //             style: AppTextStyles.size16Bold,
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // )
+                  //     : const SizedBox.shrink()
                 ],
               ),
             );
