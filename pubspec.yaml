@@ -43,6 +43,10 @@ dependencies:
   device_preview: ^1.1.0
   flutter_naver_map: ^1.0.1
   google_maps_flutter: ^2.2.8
+  location: ^4.4.0
+  http: ^0.13.5
+  json_serializable: ^6.6.1
+  flutter_svg: ^1.1.6
 
 dev_dependencies:
   flutter_test:
@@ -69,6 +73,9 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/illust/
+    - assets/images/icon/
+    - assets/images/container/
+
   fonts:
     - family: Inter
       fonts:

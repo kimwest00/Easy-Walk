@@ -35,6 +35,10 @@ class MyApp extends StatelessWidget {
           supportedLocales: const [
             Locale('ko', 'KR'),
           ],
+          localizationsDelegates: [
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate
+          ],
           initialRoute: "/splash",
           initialBinding: SplashBinding(),
           smartManagement: SmartManagement.full,

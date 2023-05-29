@@ -1,4 +1,6 @@
+import 'package:easywalk/modules/home/binding/home_binding.dart';
 import 'package:easywalk/modules/home/view/home_view.dart';
+import 'package:easywalk/modules/splash/binding/splash_binding.dart';
 import 'package:easywalk/provider/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,6 +14,7 @@ class Pages {
       name: Routes.splash,
       page: () => const SplashScreen(),
       transition: Transition.noTransition,
+      binding: SplashBinding(),
       curve: Curves.easeIn,
       popGesture: false,
     ),
@@ -21,6 +24,7 @@ class Pages {
       page: () => const HomeScreen(),
       transition: Transition.noTransition,
       curve: Curves.easeIn,
+      binding: HomeBinding(),
       popGesture: false,
     )
   ];
