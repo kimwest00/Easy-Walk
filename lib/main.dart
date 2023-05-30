@@ -3,6 +3,7 @@ import 'package:easywalk/modules/splash/binding/splash_binding.dart';
 import 'package:easywalk/provider/routes/pages.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -22,6 +23,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: [SystemUiOverlay.bottom]);
     return ScreenUtilInit(
       designSize: const Size(374, 780),
       builder: ((context, child) {

@@ -1,8 +1,10 @@
 import 'package:easywalk/modules/home/controller/home_controller.dart';
 import 'package:easywalk/modules/home/widget/home_widget.dart';
+import 'package:easywalk/provider/api/directions_api.dart';
 import 'package:easywalk/util/global_colors.dart';
 import 'package:easywalk/util/global_text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geocoding/geocoding.dart';
@@ -20,10 +22,12 @@ class HomeScreen extends GetView<HomeController> {
         () => Stack(children: [
           Positioned(
             child: GoogleMap(
+              zoomControlsEnabled: false,
               markers: controller.markers,
               onMapCreated: ((GoogleMapController mapController) {
-                controller.googleMapController?.value = mapController;
+                controller.googleMapController = mapController;
               }),
+              polylines: Set<Polyline>.of(controller.polylines.values),
               initialCameraPosition: CameraPosition(
                 target: controller.initialPosition.value, // 초기 지도 위치 설정
                 zoom: 13.0,
@@ -98,7 +102,7 @@ class HomeScreen extends GetView<HomeController> {
                                 onSubmitted: ((value) async {
                                   var convertedLocation = await controller
                                       .convertAddressToCoordinates(value);
-                                  controller.startLocation?.value =
+                                  controller.startLocation =
                                       convertedLocation ??
                                           Location(
                                               latitude: 0,
@@ -123,7 +127,7 @@ class HomeScreen extends GetView<HomeController> {
                       ),
                       Container(
                         height: 1.h,
-                        width: 246,
+                        width: 230.w,
                         color: AppColors.mainPrimary,
                       ),
                       SizedBox(
@@ -148,12 +152,11 @@ class HomeScreen extends GetView<HomeController> {
                                 onSubmitted: ((value) async {
                                   final convertedLocation = await controller
                                       .convertAddressToCoordinates(value);
-                                  controller.endLocation?.value =
-                                      convertedLocation ??
-                                          Location(
-                                              latitude: 0,
-                                              longitude: 0,
-                                              timestamp: DateTime.now());
+                                  controller.endLocation = convertedLocation ??
+                                      Location(
+                                          latitude: 0,
+                                          longitude: 0,
+                                          timestamp: DateTime.now());
                                 }),
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
@@ -171,7 +174,15 @@ class HomeScreen extends GetView<HomeController> {
                     ],
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () async {
+                      var polyline = await DirectionApi.getDirections(
+                          controller.startLocation?.latitude ?? 0,
+                          controller.startLocation?.latitude ?? 0,
+                          controller.startLocation?.latitude ?? 0,
+                          controller.startLocation?.latitude ?? 0,
+                          TravelMode.walking);
+                      controller.polylines[polyline.polylineId] = polyline;
+                    },
                     child: SvgPicture.asset(
                       "assets/images/icon/ic_next_28.svg",
                       width: 28.w,

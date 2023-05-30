@@ -12,12 +12,12 @@ class HomeController extends GetxController {
       TextEditingController().obs;
   Rx<TextEditingController> endDestinationController =
       TextEditingController().obs;
-  Rx<GoogleMapController>? googleMapController;
+  GoogleMapController? googleMapController;
   Rx<LatLng> initialPosition = LatLng(37.7749, -122.4194).obs;
-  Rx<Location>? startLocation;
-  Rx<Location>? endLocation;
+  Location? startLocation;
+  Location? endLocation;
   RxSet<Marker> markers = <Marker>{}.obs;
-
+  RxMap<PolylineId, Polyline> polylines = <PolylineId, Polyline>{}.obs;
   // Future<bool?> getCurrentPosition() async {
   //   Location location = Location();
   //   bool serviceEnabled = await location.serviceEnabled();
@@ -58,7 +58,7 @@ class HomeController extends GetxController {
           icon: BitmapDescriptor.defaultMarker,
         );
         markers.add(startMarker);
-        googleMapController?.value.animateCamera(
+        googleMapController?.animateCamera(
           CameraUpdate.newCameraPosition(
             CameraPosition(
               target: latLng,
@@ -66,6 +66,7 @@ class HomeController extends GetxController {
             ),
           ),
         );
+        Logger().d(googleMapController);
         return locations[0];
       } else {
         Fluttertoast.showToast(msg: "해당하는 장소가 없습니다. 다시 검색해주세요");
