@@ -176,7 +176,7 @@ class HomeScreen extends GetView<HomeController> {
                   ),
                   GestureDetector(
                     onTap: () async {
-                      var polyline = await DirectionApi.getDirections(
+                      var polyline = await DirectionApi.calculateWalkingRoute(
                           controller.startLocation ??
                               Location(
                                   latitude: 0,
@@ -187,16 +187,17 @@ class HomeScreen extends GetView<HomeController> {
                                   latitude: 0,
                                   longitude: 0,
                                   timestamp: DateTime.now()));
-                      // controller.polylines[polyline.polylineId] = polyline;
-                      // controller.googleMapController?.animateCamera(
-                      //   CameraUpdate.newCameraPosition(
-                      //     CameraPosition(
-                      //       target:
-                      //           polyline.points[polyline.points.length ~/ 2],
-                      //       zoom: 16.0,
-                      //     ),
-                      //   ),
-                      // );
+                      controller.polylines[
+                          polyline?.polylineId ?? PolylineId('d')] = polyline!;
+                      controller.googleMapController?.animateCamera(
+                        CameraUpdate.newCameraPosition(
+                          CameraPosition(
+                            target:
+                                polyline.points[polyline.points.length ~/ 2],
+                            zoom: 16.0,
+                          ),
+                        ),
+                      );
                     },
                     child: SvgPicture.asset(
                       "assets/images/icon/ic_next_28.svg",
