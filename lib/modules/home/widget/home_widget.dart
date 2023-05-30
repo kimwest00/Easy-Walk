@@ -3,6 +3,7 @@ import 'package:easywalk/util/global_text_styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
 class ResultListTile extends StatelessWidget {
   final Color backgroundColor;
@@ -120,5 +121,41 @@ class TypeChip extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+List<String> titleList = ['전체', '버스', '지하철', '도보'];
+
+class DirectionBottomSheet extends StatelessWidget {
+  final RxInt selectType;
+  const DirectionBottomSheet({super.key, required this.selectType});
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+        child: Container(
+            child: Column(
+      children: [
+        Row(
+          children: List.generate(
+              titleList.length,
+              (index) => TypeChip(
+                    text: titleList[index],
+                    isSelect: index == selectType ? true : false,
+                  )),
+        ),
+        SizedBox(
+          height: 13.h,
+        ),
+        ListView.separated(
+            itemBuilder: ((context, index) {}),
+            separatorBuilder: ((context, index) {
+              return SizedBox(
+                height: 10.h,
+              );
+            }),
+            itemCount: itemCount)
+      ],
+    )));
   }
 }

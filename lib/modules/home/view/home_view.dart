@@ -176,6 +176,17 @@ class HomeScreen extends GetView<HomeController> {
                   ),
                   GestureDetector(
                     onTap: () async {
+                      await DirectionApi.getPublicDirection(
+                          controller.startLocation ??
+                              Location(
+                                  latitude: 0,
+                                  longitude: 0,
+                                  timestamp: DateTime.now()),
+                          controller.endLocation ??
+                              Location(
+                                  latitude: 0,
+                                  longitude: 0,
+                                  timestamp: DateTime.now()));
                       var polyline = await DirectionApi.calculateWalkingRoute(
                           controller.startLocation ??
                               Location(
@@ -198,6 +209,30 @@ class HomeScreen extends GetView<HomeController> {
                           ),
                         ),
                       );
+
+                      // var polyline = await DirectionApi.getDirections(
+                      //     controller.startLocation ??
+                      //         Location(
+                      //             latitude: 0,
+                      //             longitude: 0,
+                      //             timestamp: DateTime.now()),
+                      //     controller.endLocation ??
+                      //         Location(
+                      //             latitude: 0,
+                      //             longitude: 0,
+                      //             timestamp: DateTime.now()));
+                      // polyline?.forEach((poly) {
+                      //   controller.polylines[poly.polylineId] = poly;
+                      //   controller.googleMapController?.animateCamera(
+                      //     CameraUpdate.newCameraPosition(
+                      //       CameraPosition(
+                      //         target: poly.points[poly.points.length ~/ 2],
+                      //         zoom: 16.0,
+                      //       ),
+                      //     ),
+                      //   );
+                      // });
+                      // Get.bottomSheet();
                     },
                     child: SvgPicture.asset(
                       "assets/images/icon/ic_next_28.svg",

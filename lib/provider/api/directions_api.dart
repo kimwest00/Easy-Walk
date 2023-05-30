@@ -10,7 +10,7 @@ import 'package:logger/logger.dart';
 import '../../util/global_key.dart';
 
 class DirectionApi {
-  static Future<void> getDirections(
+  static Future<List<Polyline>?> getDirections(
     Location startLocation,
     Location endLocation,
   ) async {
@@ -21,10 +21,10 @@ class DirectionApi {
         ',' +
         endLocation.longitude.toString();
     String url =
-        'https://maps.googleapis.com/maps/api/directions/json?origin=$origin&destination=$destination&mode=transit&key=${Secrets.API_KEY}';
+        'https://maps.googleapis.com/maps/api/directions/json?origin=$origin&destination=$destination&mode=transit&key=${Secrets.GOOGLE_API_KEY}';
     // HTTP GET 요청 보내고 응답 받기
     final response = await http.get(Uri.parse(url));
-
+    List<Polyline> resultPoly = [];
     // 응답 JSON 파싱
     final data = json.decode(response.body);
     // 대중교통 경로 정보 추출
@@ -39,6 +39,7 @@ class DirectionApi {
           for (final step in steps) {
             final travelMode = step['travel_mode'];
             if (travelMode == 'TRANSIT') {
+              print(step);
               final transitDetails = step['transit_details'];
               final line = transitDetails['line'];
               final vehicle = line['vehicle'];
@@ -56,7 +57,43 @@ class DirectionApi {
               print('도착: $arrivalStopName');
               print('시간: $duration');
               print('-----');
+              final polyline = step['polyline'];
+              var mutipolyline;
+              List<PointLatLng> decodedPolyline = [];
+
+              // Remove the leading '{' and trailing '}' if present
+              if (polyline['points'].startsWith('{') &&
+                  polyline['points'].endsWith('}')) {
+                mutipolyline = polyline.substring(1, polyline.length - 1);
+                // Split the encoded polyline string by '}' to get individual polyline strings
+                List<String> polylineStrings = mutipolyline.split('}');
+                // Process each polyline individually
+                for (String polylineString in polylineStrings) {
+                  // Decode the polyline string
+                  decodedPolyline =
+                      PolylinePoints().decodePolyline(polylineString);
+                }
+              } else {
+                decodedPolyline =
+                    PolylinePoints().decodePolyline(polyline['points']);
+              }
+
+              List<LatLng> polylineCoordinates = [];
+              for (var point in decodedPolyline) {
+                polylineCoordinates
+                    .add(LatLng(point.latitude, point.longitude));
+              }
+              PolylineId id =
+                  PolylineId(decodedPolyline[0].latitude.toString());
+              Polyline poly = Polyline(
+                polylineId: id,
+                color: Colors.red,
+                points: polylineCoordinates,
+                width: 3,
+              );
+              resultPoly.add(poly);
             }
+            return resultPoly;
           }
         }
       }
@@ -80,16 +117,16 @@ class DirectionApi {
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-
+      print(data);
       // 경로 정보 가져오기
       final routes = data['routes'];
       if (routes.isNotEmpty) {
         final route = routes[0];
+        print(routes.length);
         final distance = route['distance'];
-        final duration = route['duration'];
 
         print('Distance: $distance meters');
-        print('Duration: $duration seconds');
+        print('Duration: ${distance ~/ (1.24 * 60)} minutes');
         final legs = route['geometry'];
         print(legs);
         List<PointLatLng> decodedPolyline =
@@ -108,6 +145,30 @@ class DirectionApi {
         return polyline;
       } else {
         print('No routes found');
+      }
+    } else {
+      print('Error: ${response.body}');
+    }
+  }
+
+  static Future<Polyline?> getPublicDirection(
+    Location startLocation,
+    Location endLocation,
+  ) async {
+    final apiUrl =
+        "https://api.odsay.com/v1/api/searchPubTransPathT?OPT=1&SX=${startLocation.longitude}&SY=${startLocation.latitude}&EX=${endLocation.longitude}&EY=${endLocation.latitude}&apiKey=${Secrets.ODSAY_API_KEY}";
+    print(apiUrl);
+    final response = await http.get(Uri.parse(apiUrl));
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      print(data);
+      // 경로 정보 가져오기
+      final routes = data['result']['path'];
+      if (routes.isNotEmpty) {
+        final route = routes[0];
+        print(routes.length);
+        print(routes[0]['distance']);
       }
     } else {
       print('Error: ${response.body}');
