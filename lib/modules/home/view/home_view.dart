@@ -24,8 +24,9 @@ class HomeScreen extends GetView<HomeController> {
             child: GoogleMap(
               zoomControlsEnabled: false,
               markers: controller.markers,
-              onMapCreated: ((GoogleMapController mapController) {
+              onMapCreated: ((GoogleMapController mapController) async {
                 controller.googleMapController = mapController;
+                await controller.getCurrentLocation();
               }),
               polylines: Set<Polyline>.of(controller.polylines.values),
               initialCameraPosition: CameraPosition(
@@ -176,12 +177,26 @@ class HomeScreen extends GetView<HomeController> {
                   GestureDetector(
                     onTap: () async {
                       var polyline = await DirectionApi.getDirections(
-                          controller.startLocation?.latitude ?? 0,
-                          controller.startLocation?.latitude ?? 0,
-                          controller.startLocation?.latitude ?? 0,
-                          controller.startLocation?.latitude ?? 0,
-                          TravelMode.walking);
-                      controller.polylines[polyline.polylineId] = polyline;
+                          controller.startLocation ??
+                              Location(
+                                  latitude: 0,
+                                  longitude: 0,
+                                  timestamp: DateTime.now()),
+                          controller.endLocation ??
+                              Location(
+                                  latitude: 0,
+                                  longitude: 0,
+                                  timestamp: DateTime.now()));
+                      // controller.polylines[polyline.polylineId] = polyline;
+                      // controller.googleMapController?.animateCamera(
+                      //   CameraUpdate.newCameraPosition(
+                      //     CameraPosition(
+                      //       target:
+                      //           polyline.points[polyline.points.length ~/ 2],
+                      //       zoom: 16.0,
+                      //     ),
+                      //   ),
+                      // );
                     },
                     child: SvgPicture.asset(
                       "assets/images/icon/ic_next_28.svg",

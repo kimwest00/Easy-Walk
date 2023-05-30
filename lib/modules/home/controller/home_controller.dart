@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:logger/logger.dart';
@@ -18,27 +19,23 @@ class HomeController extends GetxController {
   Location? endLocation;
   RxSet<Marker> markers = <Marker>{}.obs;
   RxMap<PolylineId, Polyline> polylines = <PolylineId, Polyline>{}.obs;
-  // Future<bool?> getCurrentPosition() async {
-  //   Location location = Location();
-  //   bool serviceEnabled = await location.serviceEnabled();
-  //   if (!serviceEnabled) {
-  //     serviceEnabled = await location.requestService();
-  //     if (!serviceEnabled) {
-  //       return false;
-  //     }
-  //   }
-  //   PermissionStatus permissionGranted = await location.hasPermission();
-  //   if (permissionGranted == PermissionStatus.denied) {
-  //     PermissionStatus permissionGranted = await location.requestPermission();
-  //     if (permissionGranted != PermissionStatus.granted) {
-  //       return exit(0);
-  //     }
-  //   }
-  //   final position = await Location().getLocation();
-  //   initialPosition.value =
-  //       LatLng(position.latitude ?? 0, position.latitude ?? 0);
-  //   return true;
-  // }
+
+  Future<void> getCurrentLocation() async {
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) async {
+      googleMapController?.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: LatLng(position.latitude, position.longitude),
+            zoom: 18.0,
+          ),
+        ),
+      );
+    }).catchError((e) {
+      Fluttertoast.showToast(msg: e);
+    });
+  }
+
   Future<Location?> convertAddressToCoordinates(String address) async {
     try {
       List<Location> locations = await locationFromAddress(address);
@@ -62,7 +59,7 @@ class HomeController extends GetxController {
           CameraUpdate.newCameraPosition(
             CameraPosition(
               target: latLng,
-              zoom: 18.0,
+              zoom: 17.0,
             ),
           ),
         );
