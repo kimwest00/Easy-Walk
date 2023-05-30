@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
+import 'package:logger/logger.dart';
 
 class HomeController extends GetxController {
   Rx<TextEditingController> startDestinationController =
@@ -12,26 +14,45 @@ class HomeController extends GetxController {
       TextEditingController().obs;
   // Rx<GoogleMapController> googleMapController = GoogleMapController
   Rx<LatLng> initialPosition = LatLng(37.7749, -122.4194).obs;
-  Future<bool?> getCurrentPosition() async {
-    Location location = Location();
-    bool serviceEnabled = await location.serviceEnabled();
-    if (!serviceEnabled) {
-      serviceEnabled = await location.requestService();
-      if (!serviceEnabled) {
-        return false;
+  Rx<Location>? startLocation;
+  Rx<Location>? endLocation;
+
+  // Future<bool?> getCurrentPosition() async {
+  //   Location location = Location();
+  //   bool serviceEnabled = await location.serviceEnabled();
+  //   if (!serviceEnabled) {
+  //     serviceEnabled = await location.requestService();
+  //     if (!serviceEnabled) {
+  //       return false;
+  //     }
+  //   }
+  //   PermissionStatus permissionGranted = await location.hasPermission();
+  //   if (permissionGranted == PermissionStatus.denied) {
+  //     PermissionStatus permissionGranted = await location.requestPermission();
+  //     if (permissionGranted != PermissionStatus.granted) {
+  //       return exit(0);
+  //     }
+  //   }
+  //   final position = await Location().getLocation();
+  //   initialPosition.value =
+  //       LatLng(position.latitude ?? 0, position.latitude ?? 0);
+  //   return true;
+  // }
+  Future<Location?> convertAddressToCoordinates(String address) async {
+    try {
+      List<Location> locations = await locationFromAddress(address);
+      if (locations.isNotEmpty) {
+        //TODO: Location가 여러개나올경우 리스트 형식으로 보여주는 화면이 있어야
+        Fluttertoast.showToast(msg: locations[0].latitude.toString());
+        return locations[0];
+      } else {
+        Fluttertoast.showToast(msg: "해당하는 장소가 없습니다. 다시 검색해주세요");
+        return null;
       }
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+      return null;
     }
-    PermissionStatus permissionGranted = await location.hasPermission();
-    if (permissionGranted == PermissionStatus.denied) {
-      PermissionStatus permissionGranted = await location.requestPermission();
-      if (permissionGranted != PermissionStatus.granted) {
-        return exit(0);
-      }
-    }
-    final position = await Location().getLocation();
-    initialPosition.value =
-        LatLng(position.latitude ?? 0, position.latitude ?? 0);
-    return true;
   }
 
   @override

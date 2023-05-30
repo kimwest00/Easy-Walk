@@ -5,8 +5,10 @@ import 'package:easywalk/util/global_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:logger/logger.dart';
 
 class HomeScreen extends GetView<HomeController> {
   const HomeScreen({super.key});
@@ -90,6 +92,16 @@ class HomeScreen extends GetView<HomeController> {
                                 controller:
                                     controller.startDestinationController.value,
                                 style: AppTextStyles.size12Regular,
+                                onSubmitted: ((value) async {
+                                  var convertedLocation = await controller
+                                      .convertAddressToCoordinates(value);
+                                  controller.startLocation?.value =
+                                      convertedLocation ??
+                                          Location(
+                                              latitude: 0,
+                                              longitude: 0,
+                                              timestamp: DateTime.now());
+                                }),
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText: "출발지를 입력해주세요",
@@ -130,6 +142,16 @@ class HomeScreen extends GetView<HomeController> {
                                 controller:
                                     controller.endDestinationController.value,
                                 style: AppTextStyles.size12Regular,
+                                onSubmitted: ((value) async {
+                                  final convertedLocation = await controller
+                                      .convertAddressToCoordinates(value);
+                                  controller.endLocation?.value =
+                                      convertedLocation ??
+                                          Location(
+                                              latitude: 0,
+                                              longitude: 0,
+                                              timestamp: DateTime.now());
+                                }),
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText: "도착지를 입력해주세요",
@@ -145,9 +167,12 @@ class HomeScreen extends GetView<HomeController> {
                       ),
                     ],
                   ),
-                  SvgPicture.asset(
-                    "assets/images/icon/ic_next_28.svg",
-                    width: 28.w,
+                  GestureDetector(
+                    onTap: () {},
+                    child: SvgPicture.asset(
+                      "assets/images/icon/ic_next_28.svg",
+                      width: 28.w,
+                    ),
                   )
                 ],
               ),
