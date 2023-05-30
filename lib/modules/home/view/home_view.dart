@@ -4,6 +4,7 @@ import 'package:easywalk/util/global_colors.dart';
 import 'package:easywalk/util/global_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -15,45 +16,142 @@ class HomeScreen extends GetView<HomeController> {
     return Scaffold(
       body: Obx(
         () => Stack(children: [
-          GoogleMap(
-            onMapCreated: ((GoogleMapController controller) {}),
-            initialCameraPosition: CameraPosition(
-              target: controller.initialPosition.value, // 초기 지도 위치 설정
-              zoom: 13.0,
+          Positioned(
+            child: GoogleMap(
+              onMapCreated: ((GoogleMapController controller) {}),
+              initialCameraPosition: CameraPosition(
+                target: controller.initialPosition.value, // 초기 지도 위치 설정
+                zoom: 13.0,
+              ),
             ),
           ),
-          Image.asset(
-            "assets/images/container/bg_header_purple.png",
-            width: 500.w,
+          Stack(
+            children: [
+              Image.asset(
+                "assets/images/container/bg_header_purple.png",
+                width: 400.w,
+              ),
+              Positioned(
+                top: 45.h,
+                left: 20.w,
+                child: Column(
+                  children: [
+                    Text(
+                      "안녕하세요,  오늘 하루는 어떠신가요?",
+                      style: AppTextStyles.size16Bold.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.white,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8.h,
+                    ),
+                    Text(
+                        "EASY WALK는 다양한 경로를 통해\n목적지까지 안전하게 도착할 수 있도록 서비스를 제공합니다.",
+                        style: AppTextStyles.size10SemiBold.copyWith(
+                          color: AppColors.white,
+                        ))
+                  ],
+                ),
+              ),
+            ],
           ),
           Positioned(
-            top: 45.h,
-            left: 20.w,
-            child: Column(
-              children: [
-                Text(
-                  "안녕하세요,  오늘 하루는 어떠신가요?",
-                  style: AppTextStyles.size16Bold.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.white,
+            top: 170.h,
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 18.w),
+              width: 330.w,
+              height: 130.h,
+              padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 20.w),
+              decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.mainPrimary),
+                  borderRadius: BorderRadius.circular(10.r),
+                  color: AppColors.white),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 246.w,
+                        height: 28.h,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(
+                                "assets/images/icon/ic_search_20.svg"),
+                            SizedBox(
+                              width: 30.w,
+                            ),
+                            Expanded(
+                              child: TextField(
+                                controller:
+                                    controller.startDestinationController.value,
+                                style: AppTextStyles.size12Regular,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: "출발지를 입력해주세요",
+                                  hintStyle: AppTextStyles.size12Regular
+                                      .copyWith(
+                                          color: AppColors.hintText,
+                                          fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 12.h,
+                      ),
+                      Container(
+                        height: 1.h,
+                        width: 246,
+                        color: AppColors.mainPrimary,
+                      ),
+                      SizedBox(
+                        height: 12.h,
+                      ),
+                      SizedBox(
+                        width: 246.w,
+                        height: 28.h,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(
+                                "assets/images/icon/ic_map_20.svg"),
+                            SizedBox(
+                              width: 30.w,
+                            ),
+                            Expanded(
+                              child: TextField(
+                                controller:
+                                    controller.endDestinationController.value,
+                                style: AppTextStyles.size12Regular,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: "도착지를 입력해주세요",
+                                  hintStyle: AppTextStyles.size12Regular
+                                      .copyWith(
+                                          color: AppColors.hintText,
+                                          fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                SizedBox(
-                  height: 8.h,
-                ),
-                Text("EASY WALK는 다양한 경로를 통해\n목적지까지 안전하게 도착할 수 있도록 서비스를 제공합니다.",
-                    style: AppTextStyles.size10SemiBold.copyWith(
-                      color: AppColors.white,
-                    ))
-              ],
+                  SvgPicture.asset(
+                    "assets/images/icon/ic_next_28.svg",
+                    width: 28.w,
+                  )
+                ],
+              ),
             ),
-          ),
-          Positioned(
-            top: 171.h,
-            child: RoadMapContainer(
-                startDestinationController:
-                    controller.startDestinationController,
-                endDestinationController: controller.endDestinationController),
           ),
         ]),
       ),
