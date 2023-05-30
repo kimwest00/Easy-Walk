@@ -8,4 +8,5 @@ class AppColors {
   static const Color deactiveIcon = Color(0xff9A9A9A);
   static const Color mainborder = Color(0xff7165FF);
   static const Color white = Color(0xffFFFFFF);
+  static const Color shadowPrimary = Color(0x403A00E0);
 }

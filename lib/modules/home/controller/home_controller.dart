@@ -12,10 +12,11 @@ class HomeController extends GetxController {
       TextEditingController().obs;
   Rx<TextEditingController> endDestinationController =
       TextEditingController().obs;
-  // Rx<GoogleMapController> googleMapController = GoogleMapController
+  Rx<GoogleMapController>? googleMapController;
   Rx<LatLng> initialPosition = LatLng(37.7749, -122.4194).obs;
   Rx<Location>? startLocation;
   Rx<Location>? endLocation;
+  RxSet<Marker> markers = <Marker>{}.obs;
 
   // Future<bool?> getCurrentPosition() async {
   //   Location location = Location();
@@ -44,6 +45,27 @@ class HomeController extends GetxController {
       if (locations.isNotEmpty) {
         //TODO: Location가 여러개나올경우 리스트 형식으로 보여주는 화면이 있어야
         Fluttertoast.showToast(msg: locations[0].latitude.toString());
+        var location = '(${locations[0].latitude}, ${locations[0].longitude})';
+        var latLng = LatLng(locations[0].latitude, locations[0].longitude);
+        initialPosition.value = latLng;
+        Marker startMarker = Marker(
+          markerId: MarkerId(location),
+          position: LatLng(locations[0].latitude, locations[0].longitude),
+          infoWindow: InfoWindow(
+            title: 'Start',
+            snippet: location,
+          ),
+          icon: BitmapDescriptor.defaultMarker,
+        );
+        markers.add(startMarker);
+        googleMapController?.value.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+              target: latLng,
+              zoom: 18.0,
+            ),
+          ),
+        );
         return locations[0];
       } else {
         Fluttertoast.showToast(msg: "해당하는 장소가 없습니다. 다시 검색해주세요");

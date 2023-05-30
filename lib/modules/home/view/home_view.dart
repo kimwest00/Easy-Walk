@@ -20,7 +20,10 @@ class HomeScreen extends GetView<HomeController> {
         () => Stack(children: [
           Positioned(
             child: GoogleMap(
-              onMapCreated: ((GoogleMapController controller) {}),
+              markers: controller.markers,
+              onMapCreated: ((GoogleMapController mapController) {
+                controller.googleMapController?.value = mapController;
+              }),
               initialCameraPosition: CameraPosition(
                 target: controller.initialPosition.value, // 초기 지도 위치 설정
                 zoom: 13.0,
