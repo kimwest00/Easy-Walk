@@ -1,9 +1,14 @@
-class Path {
+class PathInform {
   final int pathType;
   final int totalTime;
-  final TransportDetail detail;
+  final List<TransportDetail> detail;
+  final String mapObj;
 
-  Path({required this.pathType, required this.totalTime, required this.detail});
+  PathInform(
+      {required this.mapObj,
+      required this.pathType,
+      required this.totalTime,
+      required this.detail});
 }
 
 class TransportDetail {
@@ -11,9 +16,9 @@ class TransportDetail {
   final int sectionTime;
   final String? subNo;
   final String? busNo;
-  final String startName;
-  final String endName;
-  final double distance;
+  final String? startName;
+  final String? endName;
+  final int distance;
 
   TransportDetail(
       {required this.trafficType,

@@ -8,6 +8,8 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:logger/logger.dart';
 
+import '../../../model/Trasnport.dart';
+
 class HomeController extends GetxController {
   Rx<TextEditingController> startDestinationController =
       TextEditingController().obs;
@@ -17,6 +19,8 @@ class HomeController extends GetxController {
   Rx<LatLng> initialPosition = LatLng(37.7749, -122.4194).obs;
   Location? startLocation;
   Location? endLocation;
+  RxInt selectType = 0.obs;
+  RxList<PathInform>? transportList = <PathInform>[].obs;
   RxSet<Marker> markers = <Marker>{}.obs;
   RxMap<PolylineId, Polyline> polylines = <PolylineId, Polyline>{}.obs;
 

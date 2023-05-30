@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:easywalk/model/Trasnport.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
@@ -151,12 +153,13 @@ class DirectionApi {
     }
   }
 
-  static Future<Polyline?> getPublicDirection(
+  static Future<List<PathInform>?> getPublicDirection(
     Location startLocation,
     Location endLocation,
+    int searchType,
   ) async {
     final apiUrl =
-        "https://api.odsay.com/v1/api/searchPubTransPathT?OPT=1&SX=${startLocation.longitude}&SY=${startLocation.latitude}&EX=${endLocation.longitude}&EY=${endLocation.latitude}&apiKey=${Secrets.ODSAY_API_KEY}";
+        "https://api.odsay.com/v1/api/searchPubTransPathT?OPT=1&SX=${startLocation.longitude}&SY=${startLocation.latitude}&EX=${endLocation.longitude}&EY=${endLocation.latitude}&apiKey=${Secrets.ODSAY_API_KEY}&SearchPathType=$searchType";
     print(apiUrl);
     final response = await http.get(Uri.parse(apiUrl));
 
@@ -165,13 +168,40 @@ class DirectionApi {
       print(data);
       // 경로 정보 가져오기
       final routes = data['result']['path'];
-      if (routes.isNotEmpty) {
-        final route = routes[0];
-        print(routes.length);
-        print(routes[0]['distance']);
+      RxList<PathInform> pathInform = <PathInform>[].obs;
+      for (final route in routes) {
+        List<TransportDetail> detailTransport = [];
+        for (final subRoute in route['subPath']) {
+          final trafficType = subRoute['trafficType'];
+          final sectionTime = subRoute['sectionTime'];
+          final startName = subRoute['startName'];
+          final endName = subRoute['endName'];
+          final distance = subRoute['distance'];
+          final subNo = subRoute['lane']?[0]['name'];
+          final busNo = subRoute['lane']?[0]['busNo'];
+
+          detailTransport.add(TransportDetail(
+              trafficType: trafficType,
+              sectionTime: sectionTime,
+              startName: startName,
+              subNo: subNo,
+              busNo: busNo,
+              endName: endName,
+              distance: distance));
+        }
+        pathInform.add(PathInform(
+            mapObj: route['info']['mapObj'],
+            pathType: route['pathType'],
+            totalTime: route['info']['totalTime'],
+            detail: detailTransport));
       }
+      return pathInform;
+
+      if (routes.isNotEmpty) {}
     } else {
       print('Error: ${response.body}');
     }
   }
+  //TODO:노선그래픽 데이터 검색
+  // static Future<>
 }

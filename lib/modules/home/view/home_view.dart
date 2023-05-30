@@ -176,39 +176,43 @@ class HomeScreen extends GetView<HomeController> {
                   ),
                   GestureDetector(
                     onTap: () async {
-                      await DirectionApi.getPublicDirection(
-                          controller.startLocation ??
-                              Location(
-                                  latitude: 0,
-                                  longitude: 0,
-                                  timestamp: DateTime.now()),
-                          controller.endLocation ??
-                              Location(
-                                  latitude: 0,
-                                  longitude: 0,
-                                  timestamp: DateTime.now()));
-                      var polyline = await DirectionApi.calculateWalkingRoute(
-                          controller.startLocation ??
-                              Location(
-                                  latitude: 0,
-                                  longitude: 0,
-                                  timestamp: DateTime.now()),
-                          controller.endLocation ??
-                              Location(
-                                  latitude: 0,
-                                  longitude: 0,
-                                  timestamp: DateTime.now()));
-                      controller.polylines[
-                          polyline?.polylineId ?? PolylineId('d')] = polyline!;
-                      controller.googleMapController?.animateCamera(
-                        CameraUpdate.newCameraPosition(
-                          CameraPosition(
-                            target:
-                                polyline.points[polyline.points.length ~/ 2],
-                            zoom: 16.0,
-                          ),
-                        ),
-                      );
+                      controller.transportList?.value =
+                          await DirectionApi.getPublicDirection(
+                                  controller.startLocation ??
+                                      Location(
+                                          latitude: 0,
+                                          longitude: 0,
+                                          timestamp: DateTime.now()),
+                                  controller.endLocation ??
+                                      Location(
+                                          latitude: 0,
+                                          longitude: 0,
+                                          timestamp: DateTime.now()),
+                                  0) ??
+                              [];
+
+                      // var polyline = await DirectionApi.calculateWalkingRoute(
+                      //     controller.startLocation ??
+                      //         Location(
+                      //             latitude: 0,
+                      //             longitude: 0,
+                      //             timestamp: DateTime.now()),
+                      //     controller.endLocation ??
+                      //         Location(
+                      //             latitude: 0,
+                      //             longitude: 0,
+                      //             timestamp: DateTime.now()));
+                      // controller.polylines[
+                      //     polyline?.polylineId ?? PolylineId('d')] = polyline!;
+                      // controller.googleMapController?.animateCamera(
+                      //   CameraUpdate.newCameraPosition(
+                      //     CameraPosition(
+                      //       target:
+                      //           polyline.points[polyline.points.length ~/ 2],
+                      //       zoom: 16.0,
+                      //     ),
+                      //   ),
+                      // );
 
                       // var polyline = await DirectionApi.getDirections(
                       //     controller.startLocation ??
@@ -232,7 +236,19 @@ class HomeScreen extends GetView<HomeController> {
                       //     ),
                       //   );
                       // });
-                      // Get.bottomSheet();
+                      await Get.bottomSheet(DirectionBottomSheet(
+                          startLocation: controller.startLocation ??
+                              Location(
+                                  latitude: 0,
+                                  longitude: 0,
+                                  timestamp: DateTime.now()),
+                          endLocation: controller.endLocation ??
+                              Location(
+                                  latitude: 0,
+                                  longitude: 0,
+                                  timestamp: DateTime.now()),
+                          selectType: controller.selectType,
+                          pathInform: controller.transportList));
                     },
                     child: SvgPicture.asset(
                       "assets/images/icon/ic_next_28.svg",
