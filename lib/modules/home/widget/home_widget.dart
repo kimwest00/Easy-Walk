@@ -30,6 +30,7 @@ class ResultListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 15.w),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30.r),
         color: backgroundColor,
@@ -74,7 +75,7 @@ class ResultListTile extends StatelessWidget {
   factory ResultListTile.mainTileSubway({required PathInform path}) {
     return ResultListTile(
         backgroundColor: AppColors.mainPrimary,
-        icon: "subway_30",
+        icon: "subway_33",
         transport: "지하철",
         isBest: true,
         time: path.totalTime,
@@ -92,7 +93,7 @@ class ResultListTile extends StatelessWidget {
   factory ResultListTile.primaryTileBus({required PathInform path}) {
     return ResultListTile(
         backgroundColor: AppColors.white,
-        icon: "bus_30",
+        icon: "bus_33",
         transport: "버스",
         time: path.totalTime,
         textColor: AppColors.mainPrimary);
@@ -100,7 +101,7 @@ class ResultListTile extends StatelessWidget {
   factory ResultListTile.primaryTileSubway({required PathInform path}) {
     return ResultListTile(
         backgroundColor: AppColors.white,
-        icon: "subway_30",
+        icon: "subway_33",
         transport: "지하철",
         time: path.totalTime,
         textColor: AppColors.mainPrimary);
@@ -137,18 +138,20 @@ class DirectionBottomSheet extends StatelessWidget {
   final RxList<PathInform>? pathInform;
   final Location startLocation;
   final Location endLocation;
-
+  final double? duration;
   const DirectionBottomSheet(
       {Key? key,
       required this.selectType,
       required this.pathInform,
       required this.startLocation,
-      required this.endLocation})
+      required this.endLocation,
+      this.duration})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
+        padding: EdgeInsets.symmetric(vertical: 23.h, horizontal: 35.w),
         color: AppColors.white,
         height: 330.h,
         child: Obx(
@@ -165,6 +168,10 @@ class DirectionBottomSheet extends StatelessWidget {
                                   await DirectionApi.getPublicDirection(
                                           startLocation, endLocation, index) ??
                                       [];
+                            } else {
+                              pathInform!.clear();
+                              await DirectionApi.calculateWalkingRoute(
+                                  startLocation, endLocation);
                             }
                           },
                           child: TypeChip(
@@ -178,26 +185,34 @@ class DirectionBottomSheet extends StatelessWidget {
               ),
               SingleChildScrollView(
                 child: SizedBox(
-                  height: 229.h,
-                  child: ListView.separated(
-                      shrinkWrap: true,
-                      // physics: NeverScrollableScrollPhysics(),
-                      itemBuilder: ((context, index) {
-                        if (pathInform![index].pathType == 1) {
-                          return ResultListTile.primaryTileSubway(
-                              path: pathInform![index]);
-                        } else {
-                          return ResultListTile.primaryTileBus(
-                              path: pathInform![index]);
-                        }
-                      }),
-                      separatorBuilder: ((context, index) {
-                        return SizedBox(
-                          height: 10.h,
-                        );
-                      }),
-                      itemCount: pathInform!.length),
-                ),
+                    height: 229.h,
+                    child:
+                        // selectType.value!=3?
+                        ListView.separated(
+                            shrinkWrap: true,
+                            // physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: ((context, index) {
+                              if (pathInform![index].pathType == 1) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    // Get.to()
+                                  },
+                                  child: ResultListTile.primaryTileSubway(
+                                      path: pathInform![index]),
+                                );
+                              } else {
+                                return ResultListTile.primaryTileBus(
+                                    path: pathInform![index]);
+                              }
+                            }),
+                            separatorBuilder: ((context, index) {
+                              return SizedBox(
+                                height: 10.h,
+                              );
+                            }),
+                            itemCount: pathInform!.length)
+                    // :ResultListTile(backgroundColor: AppColors.mainPrimary,icon: "people_30",time: ,),
+                    ),
               )
             ],
           ),

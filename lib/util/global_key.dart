@@ -3,4 +3,6 @@ class Secrets {
   static const GOOGLE_API_KEY = "AIzaSyAHFOsYp1lZssZaKNQ33Oepnb7LnCBKlTw";
   static const ODSAY_API_KEY =
       "HCzHwGJUFfOv4JaZ9Vh6iEKaNyg4EqTo0QBr%2B%2BHYIzY";
+  static const OLDMAN_KEY =
+      "79GKY+D+b/ZRyn2q2NoTFAI2lxCNKUywo6xrntjzVp7nRXFxyB+VWxixlVNK69nPaWv/+j49qXOgkeaTp2JzoQ==";
 }

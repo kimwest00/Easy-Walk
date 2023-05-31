@@ -1,8 +1,8 @@
 class PathInform {
   final int pathType;
   final int totalTime;
-  final List<TransportDetail> detail;
-  final String mapObj;
+  final List<TransportDetail>? detail;
+  final String? mapObj;
 
   PathInform(
       {required this.mapObj,

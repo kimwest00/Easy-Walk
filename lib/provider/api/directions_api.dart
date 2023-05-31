@@ -196,12 +196,77 @@ class DirectionApi {
             detail: detailTransport));
       }
       return pathInform;
-
-      if (routes.isNotEmpty) {}
     } else {
       print('Error: ${response.body}');
     }
   }
-  //TODO:노선그래픽 데이터 검색
-  // static Future<>
+
+  //TODO:노선그래픽 데이터 검색<-polyline 추가
+
+  static Future<List<Marker>> getOldmanZone() async {
+    var siDo = [
+      680,
+      740,
+      305,
+      500,
+      620,
+      215,
+      530,
+      545,
+      350,
+      320,
+      230,
+      590,
+      440,
+      410,
+      650,
+      200,
+      290,
+      710,
+      470,
+      560,
+      170,
+      380,
+      110,
+      140,
+      260
+    ];
+    List<Marker> markers = [];
+
+    siDo.forEach((element) async {
+      var status = true;
+      var index = 0;
+      while (status) {
+        var url =
+            'http://apis.data.go.kr/B552061/frequentzoneOldman/getRestFrequentzoneOldman?serviceKey${Secrets.OLDMAN_KEY}&searchYearCd=2022&siDo=11&guGun=${element}&type=json&numOfRows=10&pageNo=${index}';
+        final response = await http.get(Uri.parse(url));
+        print(response.body);
+        if (response.statusCode == 200) {
+          final data = json.decode(response.body);
+          var polygonList = data['geom_json']['coordinates'];
+          if (polygonList.isBlank) {
+            break;
+          }
+          print(polygonList);
+          polygonList.forEach((polygon) {
+            Marker marker = Marker(
+              markerId:
+                  MarkerId(polygon[0].toString() + ',' + polygon[1].toString()),
+              position: LatLng(polygon[0], polygon[1]),
+              infoWindow: InfoWindow(
+                title: 'Start',
+                snippet: polygon[0].toString() + ',' + polygon[1].toString(),
+              ),
+              icon: BitmapDescriptor.defaultMarker,
+            );
+            markers.add(marker);
+          });
+        } else {
+          break;
+        }
+        index++;
+      }
+    });
+    return markers;
+  }
 }

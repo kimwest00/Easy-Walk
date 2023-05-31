@@ -35,39 +35,41 @@ class HomeScreen extends GetView<HomeController> {
               ),
             ),
           ),
-          Stack(
-            children: [
-              Image.asset(
-                "assets/images/container/bg_header_purple.png",
-                width: 400.w,
-              ),
-              Positioned(
-                top: 45.h,
-                left: 20.w,
-                child: Column(
+          controller.isOnBoarding.value
+              ? Stack(
                   children: [
-                    Text(
-                      "안녕하세요,  오늘 하루는 어떠신가요?",
-                      style: AppTextStyles.size16Bold.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.white,
+                    Image.asset(
+                      "assets/images/container/bg_header_purple.png",
+                      width: 400.w,
+                    ),
+                    Positioned(
+                      top: 45.h,
+                      left: 20.w,
+                      child: Column(
+                        children: [
+                          Text(
+                            "안녕하세요,  오늘 하루는 어떠신가요?",
+                            style: AppTextStyles.size16Bold.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.white,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 8.h,
+                          ),
+                          Text(
+                              "EASY WALK는 다양한 경로를 통해\n목적지까지 안전하게 도착할 수 있도록 서비스를 제공합니다.",
+                              style: AppTextStyles.size10SemiBold.copyWith(
+                                color: AppColors.white,
+                              ))
+                        ],
                       ),
                     ),
-                    SizedBox(
-                      height: 8.h,
-                    ),
-                    Text(
-                        "EASY WALK는 다양한 경로를 통해\n목적지까지 안전하게 도착할 수 있도록 서비스를 제공합니다.",
-                        style: AppTextStyles.size10SemiBold.copyWith(
-                          color: AppColors.white,
-                        ))
                   ],
-                ),
-              ),
-            ],
-          ),
+                )
+              : SizedBox.shrink(),
           Positioned(
-            top: 170.h,
+            top: controller.isOnBoarding.value ? 170.h : 100.h,
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 18.w),
               width: 330.w,
@@ -176,6 +178,7 @@ class HomeScreen extends GetView<HomeController> {
                   ),
                   GestureDetector(
                     onTap: () async {
+                      controller.isOnBoarding.value = false;
                       controller.transportList?.value =
                           await DirectionApi.getPublicDirection(
                                   controller.startLocation ??
@@ -259,6 +262,7 @@ class HomeScreen extends GetView<HomeController> {
               ),
             ),
           ),
+          // FloatingActionButton(onPressed: onPressed)
         ]),
       ),
     );

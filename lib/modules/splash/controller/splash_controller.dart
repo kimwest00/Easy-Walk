@@ -11,4 +11,5 @@ class SplashController extends GetxController {
     "경로 방식에 대한 예상 시간을 예측하기\n때문에 편리한 이용이 가능합니다.",
     "승 하차 혼잡 구역, 노인 사고 다발 구역을\n알려줄 뿐만 아니라 보호구역까지 표시해\n안전하게 이동할 수 있도록 해줍니다."
   ];
+  RxBool isLast = false.obs;
 }

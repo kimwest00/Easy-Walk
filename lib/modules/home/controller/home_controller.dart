@@ -9,8 +9,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:logger/logger.dart';
 
 import '../../../model/Trasnport.dart';
+import '../../../provider/api/directions_api.dart';
 
 class HomeController extends GetxController {
+  Rx<bool> isOnBoarding = true.obs;
   Rx<TextEditingController> startDestinationController =
       TextEditingController().obs;
   Rx<TextEditingController> endDestinationController =
@@ -82,6 +84,11 @@ class HomeController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
+    var markers = await DirectionApi.getOldmanZone();
+    markers.forEach((element) {
+      markers.add(element);
+    });
+    print(markers);
     // await getCurrentPosition();
   }
 }
