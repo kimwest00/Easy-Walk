@@ -10,6 +10,7 @@ import 'package:logger/logger.dart';
 
 import '../../../model/Trasnport.dart';
 import '../../../provider/api/directions_api.dart';
+import '../../../provider/services/polyline_services.dart';
 
 class HomeController extends GetxController {
   Rx<bool> isOnBoarding = true.obs;
@@ -17,19 +18,17 @@ class HomeController extends GetxController {
       TextEditingController().obs;
   Rx<TextEditingController> endDestinationController =
       TextEditingController().obs;
-  GoogleMapController? googleMapController;
   Rx<LatLng> initialPosition = LatLng(37.7749, -122.4194).obs;
   Location? startLocation;
   Location? endLocation;
   RxInt selectType = 0.obs;
   RxList<PathInform>? transportList = <PathInform>[].obs;
   RxSet<Marker> markers = <Marker>{}.obs;
-  RxMap<PolylineId, Polyline> polylines = <PolylineId, Polyline>{}.obs;
 
   Future<void> getCurrentLocation() async {
     await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
         .then((Position position) async {
-      googleMapController?.animateCamera(
+      PolyService.to.googleMapController?.animateCamera(
         CameraUpdate.newCameraPosition(
           CameraPosition(
             target: LatLng(position.latitude, position.longitude),
@@ -61,7 +60,7 @@ class HomeController extends GetxController {
           icon: BitmapDescriptor.defaultMarker,
         );
         markers.add(startMarker);
-        googleMapController?.animateCamera(
+        PolyService.to.googleMapController?.animateCamera(
           CameraUpdate.newCameraPosition(
             CameraPosition(
               target: latLng,
@@ -69,7 +68,7 @@ class HomeController extends GetxController {
             ),
           ),
         );
-        Logger().d(googleMapController);
+        Logger().d(PolyService.to.googleMapController);
         return locations[0];
       } else {
         Fluttertoast.showToast(msg: "해당하는 장소가 없습니다. 다시 검색해주세요");
@@ -84,11 +83,11 @@ class HomeController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    var markers = await DirectionApi.getOldmanZone();
-    markers.forEach((element) {
-      markers.add(element);
-    });
-    print(markers);
+    // var markers = await DirectionApi.getOldmanZone();
+    // markers.forEach((element) {
+    //   markers.add(element);
+    // });
+    // print(markers);
     // await getCurrentPosition();
   }
 }

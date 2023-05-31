@@ -1,6 +1,7 @@
 import 'package:easywalk/modules/home/controller/home_controller.dart';
 import 'package:easywalk/modules/home/widget/home_widget.dart';
 import 'package:easywalk/provider/api/directions_api.dart';
+import 'package:easywalk/provider/services/polyline_services.dart';
 import 'package:easywalk/util/global_colors.dart';
 import 'package:easywalk/util/global_text_styles.dart';
 import 'package:flutter/material.dart';
@@ -25,10 +26,10 @@ class HomeScreen extends GetView<HomeController> {
               zoomControlsEnabled: false,
               markers: controller.markers,
               onMapCreated: ((GoogleMapController mapController) async {
-                controller.googleMapController = mapController;
+                PolyService.to.googleMapController = mapController;
                 await controller.getCurrentLocation();
               }),
-              polylines: Set<Polyline>.of(controller.polylines.values),
+              polylines: Set<Polyline>.of(PolyService.to.polylines.values),
               initialCameraPosition: CameraPosition(
                 target: controller.initialPosition.value, // 초기 지도 위치 설정
                 zoom: 13.0,

@@ -4,5 +4,5 @@ class Secrets {
   static const ODSAY_API_KEY =
       "HCzHwGJUFfOv4JaZ9Vh6iEKaNyg4EqTo0QBr%2B%2BHYIzY";
   static const OLDMAN_KEY =
-      "79GKY+D+b/ZRyn2q2NoTFAI2lxCNKUywo6xrntjzVp7nRXFxyB+VWxixlVNK69nPaWv/+j49qXOgkeaTp2JzoQ==";
+      "6ukHRfTd3TeZw03mnb3%2BI%2Bsoh%2FyRKlMGlnmDmdvh%2BdkRCDP%2B6xuNi%2Bo1%2BJv2XVe39xd34MFqClKgMhtpVlXrzA%3D%3D";
 }

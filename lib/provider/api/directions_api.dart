@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:easywalk/model/Trasnport.dart';
+import 'package:easywalk/provider/services/polyline_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geocoding/geocoding.dart';
@@ -102,7 +103,7 @@ class DirectionApi {
     }
   }
 
-  static Future<Polyline?> calculateWalkingRoute(
+  static Future<int?> calculateWalkingRoute(
     Location startLocation,
     Location endLocation,
   ) async {
@@ -144,7 +145,16 @@ class DirectionApi {
           points: polylineCoordinates,
           width: 3,
         );
-        return polyline;
+        PolyService.to.polylines[id] = polyline;
+        await PolyService.to.googleMapController?.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+              target: polyline.points[polyline.points.length ~/ 2],
+              zoom: 15.0,
+            ),
+          ),
+        );
+        return distance ~/ (1.24 * 60);
       } else {
         print('No routes found');
       }
@@ -238,7 +248,7 @@ class DirectionApi {
       var index = 0;
       while (status) {
         var url =
-            'http://apis.data.go.kr/B552061/frequentzoneOldman/getRestFrequentzoneOldman?serviceKey${Secrets.OLDMAN_KEY}&searchYearCd=2022&siDo=11&guGun=${element}&type=json&numOfRows=10&pageNo=${index}';
+            'http://apis.data.go.kr/B552061/frequentzoneOldman/getRestFrequentzoneOldman?serviceKey=${Secrets.OLDMAN_KEY}&searchYearCd=2022&siDo=11&guGun=${element}&type=json&numOfRows=10&pageNo=${index}';
         final response = await http.get(Uri.parse(url));
         print(response.body);
         if (response.statusCode == 200) {
